@@ -26,6 +26,7 @@ jobs:
 
       - name: Trivy file scan
         run: trivy fs . > trivyfs.txt
+
       - name: Docker build and push
         run: |
           docker build -t tic-tac-toe . 
@@ -34,3 +35,5 @@ jobs:
           docker push huynguyen260398/tic-tac-toe:latest
         env:
           DOCKER_CLI_ACI: 1
+      - name: Image scan
+        run: trivy image huynguyen260398/tic-tac-toe:latest > trivyimage.txt
