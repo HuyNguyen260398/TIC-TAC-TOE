@@ -24,8 +24,8 @@ jobs:
       - name: NPM install dependencies
         run: npm install
 
-      - name: Trivy file scan
-        run: trivy fs . > trivyfs.txt
+      # - name: Trivy file scan
+      #   run: trivy fs . > trivyfs.txt
 
       - name: Docker build and push
         run: |
@@ -35,8 +35,9 @@ jobs:
           docker push huynguyen260398/tic-tac-toe:latest
         env:
           DOCKER_CLI_ACI: 1
-      - name: Image scan
-        run: trivy image huynguyen260398/tic-tac-toe:latest > trivyimage.txt
+
+      # - name: Image scan
+      #   run: trivy image huynguyen260398/tic-tac-toe:latest > trivyimage.txt
 
   deploys:
     needs: build-analyze-scan
@@ -45,17 +46,17 @@ jobs:
       - name: Docker pull image
         run: docker pull huynguyen260398/tic-tac-toe:latest
 
-      - name: Image scan
-        run: trivy image huynguyen260398/tic-tac-toe:latest > trivyimagedeploy.txt
+      # - name: Image scan
+      #   run: trivy image huynguyen260398/tic-tac-toe:latest > trivyimagedeploy.txt
 
-      - name: Deploy to container
-        run: docker run -d --name game -p 3000:3000 huynguyen260398/tic-tac-toe:latest
+      # - name: Deploy to container
+      #   run: docker run -d --name game -p 3000:3000 huynguyen260398/tic-tac-toe:latest
 
       - name: Update kubeconfig
         run: aws eks --region ap-southeast-1 update-kubeconfig --name EKS_CLOUD
 
       - name: Deploy to kubernetes
-        run: kubectl delete -f deployment-service.yml
+        run: kubectl apply -f deployment-service.yml
 
       - name: Send a Slack notification
         if: always()
